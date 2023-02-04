@@ -1,6 +1,7 @@
 import express, { response } from "express";
 import bodyParser from "body-parser";
 import { config } from "dotenv";
+import cors from "cors";
 import UrlSchema, { incrementShortCode } from "./mongodb/models/models.js";
 import connect from "./mongodb/connect.js";
 import { url } from "inspector";
@@ -14,6 +15,7 @@ app.use(
   })
 );
 app.use(bodyParser.json());
+app.use(cors())
 
 app.get("/", (req, res) => {
   res.send("Namaste World!");
@@ -21,8 +23,9 @@ app.get("/", (req, res) => {
 
 app.post("/short", async (req, res) => {
   const { originalURL } = req.body;
+  console.log(originalURL, "user input")
   const check = await UrlSchema.findOne({ originalURL: originalURL });
-  console.log(check)
+  console.log(check, "checking")
   if (check == null) {
     const { shortCode } = await incrementShortCode();
     UrlSchema.create({

@@ -1,34 +1,61 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import { useRef, useState } from "react";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [url, setUrl] = useState("");
+  const inputRef = useRef(null);
 
+  async function submitHandler(e) {
+    e.preventDefault();
+    if (inputRef.current.value === null) return;
+    if (inputRef.current.value.trim() === "") return;
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ originalURL: inputRef.current.value })
+  };
+    const response = await fetch("http://localhost:3001/short", requestOptions);
+    const data = await response.json();
+    setUrl(data.url);
+    inputRef.current.value = "";
+    console.log(data);
+  }
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+    <>
+      <nav className="flex bg-white p-4 gap-2 md:gap-4">
+        <img src="/vite.svg" alt="logo" />
+        <h2 className="text-2xl">URL Shortener</h2>
+      </nav>
+      <h1 className="text-3xl ffont-bold m-auto mt-4 text-center ">
+        Short your lengthy boring URL.
+      </h1>
+      <form className="flex mx-auto my-4 flex-col justify-center bg-gray-100 rounded-md max-w-xl p-4">
+        <div className="flex gap-2 justify-center items-center m-2">
+          <label htmlFor="inputUrl" className="text-xl">
+            Original URL :{" "}
+          </label>
+          <input
+            type="text"
+            ref={inputRef}
+            id="inputUrl"
+            className="bg-white rounded-md w-xl p-2"
+          />
+        </div>
+        <button
+          onClick={submitHandler}
+          type="submit"
+          className="p-2 bg-purple-500 w-full rounded-md max-w-[15rem] mx-auto mt-4 text-white"
+        >
+          Short
         </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
-  )
+      </form>
+      {url && (
+        <div className="flex justify-center gap-2">
+          <p>Short Url : </p>
+          <a href={url} target="_blank" className="text-blue-600 underline animate-pulse">{url}</a>
+        </div>
+      )}
+    </>
+  );
 }
 
-export default App
+export default App;
