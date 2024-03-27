@@ -1,5 +1,6 @@
 import { Prisma, PrismaClient } from '@prisma/client'
-import express from 'express'
+import express, { Request, Response } from 'express'
+import { body, matchedData, validationResult } from 'express-validator'
 
 const prisma = new PrismaClient()
 const app = express()
@@ -16,25 +17,76 @@ app.get("/", async (req, res) => {
 })
 
 app.get("/url/:id", async (req, res) => {
-  let urlid = req.params.id;
-  let data;
+  let short_url = req.params.id;
   try {
-    data = await prisma.url.findFirst({
+    let data = await prisma.url.update({
       where: {
-        short_url: urlid
+        short_url: short_url
+      },
+      data: {
+        click: {
+          increment: 1
+        }
       },
       select: {
         id: true,
-        original_url: true
+        original_url: true,
+        short_url: true,
+        click: true
       }
-    });
-  } catch (error) {
-    res.status(404).json({ err: "No link found." })
-  }
-  if (data) {
-    res.status(200).send({
-      original_url: data.original_url
     })
+    if (data) {
+      res.status(200).json(data);
+    }
+  } catch (error) {
+    res.status(404).json({ "error": "No links found." })
+  }
+  // try {
+  //   let data = await prisma.url.findFirst({
+  //     where: {
+  //       short_url: urlid
+  //     },
+  //     select: {
+  //       id: true,
+  //       original_url: true,
+  //       click: true
+  //     }
+  //   });
+  //   if (data) {
+  //     res.status(200).send({
+  //       original_url: data.original_url,
+  //       clicks: data.click
+  //     })
+  //   }
+  // } catch (error) {
+  //   res.status(404).json({ err: "No link found." })
+  // }
+
+})
+
+app.post("/url", [body("original_url").notEmpty().trim(), body("short_url").notEmpty().trim()], async (req: Request, res: Response) => {
+  const err = validationResult(req);
+  if (!err.isEmpty()) {
+    res.status(400).json({ "error": "Invalid Request" })
+    return
+  }
+  const d = matchedData(req);
+  try {
+    let url = await prisma.url.create({
+      data: {
+        original_url: d.original_url,
+        short_url: d.short_url
+      },
+      select: {
+        id: true,
+        original_url: true,
+        short_url: true,
+        click: true
+      }
+    })
+    res.status(201).json({ "message": "Url created succesfully.", data: url })
+  } catch (error) {
+    res.status(500).json({ "error": "Internal server error." })
   }
 })
 
