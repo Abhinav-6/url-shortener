@@ -1,18 +1,24 @@
-import { Prisma, PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
 import express, { Request, Response } from 'express'
+import cors from "cors"
 import { body, matchedData, validationResult } from 'express-validator'
 
 const prisma = new PrismaClient()
 const app = express()
 
 app.use(express.json())
+app.use(cors<Request>())
 
 app.get("/ping", (req, res) => {
   res.send("pong")
 })
 
 app.get("/", async (req, res) => {
-  let urls = await prisma.url.findMany()
+  let urls = await prisma.url.findMany({
+    orderBy: {
+      createdAt: "desc"
+    }
+  })
   res.send(urls)
 })
 
@@ -71,6 +77,7 @@ app.post("/url", [body("original_url").notEmpty().trim(), body("short_url").notE
     return
   }
   const d = matchedData(req);
+  console.log(d)
   try {
     let url = await prisma.url.create({
       data: {
