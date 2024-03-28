@@ -1,6 +1,6 @@
 <script lang="ts">
     import Table from "./Table.svelte";
-
+    
     async function getAllUrls() {
         return fetch("http://localhost:3000/");
     }

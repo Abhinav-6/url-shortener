@@ -1,20 +1,34 @@
 <script>
-    import { goto } from "$app/navigation";
+    import { browser } from "$app/environment";
     import { page } from "$app/stores";
+
     // The slug is accessed via $page.params.slug
     const slug = $page.params.slug;
-    // export let slug;
+
     async function getUrl() {
-        let response = await fetch(
-            `${import.meta.env.VITE_PUBLIC_API_URL}/${slug}`
-        );
-        let data = await response.json();
-        return data;
+        try {
+            let response = await fetch(
+                `${import.meta.env.VITE_PUBLIC_API_URL}/url/${slug}`
+            );
+            let data = await response.json();
+            console.log(data);
+
+            // Check if the browser is already at the original_url to prevent a loop
+            if (browser && window.location.href !== data.original_url) {
+                window.location.href = data.original_url;
+            }
+            return data;
+        } catch (error) {
+            console.error("Fetch error:", error);
+            // Handle the error appropriately
+        }
     }
 </script>
 
 {#await getUrl()}
-    <p>Redirecting...</p>
+    <p class="text-center">Redirecting...</p>
 {:then data}
-    {console.log(data)}
+    <!-- Render data or perform other actions -->
+{:catch error}
+    <p>Error: {error.message}</p>
 {/await}
