@@ -5,19 +5,19 @@ const prisma = new PrismaClient();
 
 const urlData = [
   {
-    original_url: "www.google.com",
+    original_url: "https://www.google.com",
     short_url: crypto.randomUUID().substring(0, 6),
   },
   {
-    original_url: "www.github.com",
+    original_url: "https://www.github.com",
     short_url: crypto.randomUUID().substring(0, 6),
   },
   {
-    original_url: "www.facebook.com",
+    original_url: "https://www.facebook.com",
     short_url: crypto.randomUUID().substring(0, 6),
   },
   {
-    original_url: "www.twitter.com",
+    original_url: "https://www.twitter.com",
     short_url: crypto.randomUUID().substring(0, 6),
   },
 ];

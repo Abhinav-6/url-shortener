@@ -5,10 +5,8 @@ export const actions = {
         const formData = await request.formData();
         const original_url = formData.get('original_url');
         const short_url = formData.get('short_url');
-        console.log(original_url, short_url)
         // Define the external API endpoint
         const apiEndpoint = import.meta.env.VITE_PUBLIC_API_URL
-        console.log(apiEndpoint)
         // Prepare the data to be sent
         const dataToSend = {
             original_url: original_url,
@@ -29,16 +27,16 @@ export const actions = {
             if (response.ok) {
                 const jsonResponse = await response.json();
                 // Process the response data...
-                console.log(jsonResponse);
                 return jsonResponse;
             } else {
                 // Handle errors
-                console.log(response.status)
-                throw new Error('API call failed: ' + response.status);
+                let error = await response.text()
+                throw new Error('API call failed: ' + error);
             }
         } catch (error) {
             // Handle any other errors
-            console.error('There was an error calling the external API', error);
+
+            console.log(error)
         }
     }
 };

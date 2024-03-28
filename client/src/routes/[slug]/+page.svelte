@@ -10,16 +10,22 @@
             let response = await fetch(
                 `${import.meta.env.VITE_PUBLIC_API_URL}/url/${slug}`
             );
-            let data = await response.json();
-            console.log(data);
+            console.log(response);
+            if (response.ok) {
+                let data = await response.json();
+                console.log(data);
+                if (browser && window.location.href !== data.original_url) {
+                    window.location.href = data.original_url;
+                }
+                return data;
+            } else {
+                throw new Error("No link found.");
+            }
 
             // Check if the browser is already at the original_url to prevent a loop
-            if (browser && window.location.href !== data.original_url) {
-                window.location.href = data.original_url;
-            }
-            return data;
         } catch (error) {
-            console.error("Fetch error:", error);
+            // console.error("Fetch error:", error);
+            throw error;
             // Handle the error appropriately
         }
     }
@@ -30,5 +36,5 @@
 {:then data}
     <!-- Render data or perform other actions -->
 {:catch error}
-    <p>Error: {error.message}</p>
+    <p class="text-center">Error: {error.message}</p>
 {/await}
