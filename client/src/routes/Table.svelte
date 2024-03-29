@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { UrlResponseType } from "../types/db";
     export let data: UrlResponseType[] = [];
-    const base_url = import.meta.env.BASE_URL;
+    const base_url = window.location.origin;
 </script>
 
 <div class="w-full absolute overflow-auto">
@@ -50,7 +50,7 @@
                     <td
                         class="px-8 py-4 border-r border-b border-gray-400 text-left break-words text-wrap"
                     >
-                        <a href={`${base_url}${d.short_url}`} target="_blank"
+                        <a href={`/${d.short_url}`} target="_blank"
                             >{base_url}{d.short_url}</a
                         >
                     </td>
