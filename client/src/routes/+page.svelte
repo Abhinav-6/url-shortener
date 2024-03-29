@@ -1,8 +1,9 @@
 <script lang="ts">
     import Table from "./Table.svelte";
-    
+    const apiEndpoint = import.meta.env.VITE_PUBLIC_API_URL;
+
     async function getAllUrls() {
-        return fetch("http://localhost:3000/");
+        return fetch(`${apiEndpoint}/`);
     }
     let promise = getAllUrls();
     let org_url: string = "";

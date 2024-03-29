@@ -1,13 +1,20 @@
 import { PrismaClient } from '@prisma/client'
 import express, { Request, Response } from 'express'
 import cors from "cors"
-import { body, matchedData, validationResult } from 'express-validator'
+import { body, matchedData, validationResult } from 'express-validator';
+import * as cfg from "dotenv";
 
 const prisma = new PrismaClient()
 const app = express()
 
 app.use(express.json())
 app.use(cors<Request>())
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, PUT, POST");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 app.get("/ping", (req, res) => {
   res.send("pong")
@@ -97,8 +104,9 @@ app.post("/url", [body("original_url").notEmpty().trim(), body("short_url").notE
   }
 })
 
+const PORT = process.env.PORT || 8000
 
-const server = app.listen(3000, () =>
+const server = app.listen(PORT, () =>
   console.log(`
-🚀 Server ready at: http://localhost:3000`),
+🚀 Server ready at: http://localhost:${PORT}`),
 )
