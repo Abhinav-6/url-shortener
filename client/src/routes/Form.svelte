@@ -13,6 +13,7 @@
     <div class="w-full flex flex-col gap-1">
         <label for="url" class="font-semibold">Destination URL</label>
         <input
+            required
             on:change={() => {
                 if (org_url === "") {
                     short_url = randomShortUrl();
