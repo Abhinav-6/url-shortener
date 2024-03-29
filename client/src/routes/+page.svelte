@@ -29,7 +29,7 @@
             <Table data={d} />
         {/await}
     {:catch error}
-        <p class="text-center">Error loading urls...</p>
+        <p class="text-center">Error loading urls... try again</p>
         <!-- optionally show something while promise was rejected -->
     {/await}
 </main>
