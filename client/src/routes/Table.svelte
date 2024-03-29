@@ -1,12 +1,7 @@
-<script>
-    // import { BASE_URL } from "$env/static/public";
-    const base_url = import.meta.env.VITE_PUBLIC_BASE_PATH;
-    // const base_url = env.BASE_URL;
-    // console.log(base_url);
-    /**
-     * @type {Iterable<any> | ArrayLike<any>}
-     */
-    export let data = [];
+<script lang="ts">
+    import type { UrlResponseType } from "../types/db";
+    export let data: UrlResponseType[] = [];
+    const base_url = import.meta.env.BASE_URL;
 </script>
 
 <div class="w-full absolute overflow-auto">

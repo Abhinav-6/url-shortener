@@ -23,12 +23,17 @@ app.get("/ping", (req, res) => {
 });
 
 app.get("/", async (req, res) => {
-  let urls = await prisma.url.findMany({
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
-  res.send(urls);
+  try {
+    let urls = await prisma.url.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    res.send(urls);
+  } catch (error) {
+    res.status(500).json({"error": "Internal server error"})
+  }
+
 });
 
 app.get("/url/:id", async (req, res) => {

@@ -24,12 +24,12 @@
     {:then data}
         <!-- promise was fulfilled -->
         {#await data.json()}
-            loading...
+            <p class="text-center">loading...</p>
         {:then d}
             <Table data={d} />
         {/await}
     {:catch error}
-        <p>Error loading urls...</p>
+        <p class="text-center">Error loading urls...</p>
         <!-- optionally show something while promise was rejected -->
     {/await}
 </main>
