@@ -43,6 +43,7 @@
                         class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap border-r border-b border-gray-400 text-left"
                     >
                         {new Date(d.createdAt).toLocaleDateString()}
+                        {new Date(d.createdAt).toLocaleTimeString()}
                     </td>
                     <td
                         class="px-6 py-4 border-r border-b border-gray-400 text-left"

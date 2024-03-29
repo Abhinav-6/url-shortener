@@ -30,12 +30,13 @@ export const actions = {
                 return jsonResponse;
             } else {
                 // Handle errors
-                console.log(response.status)
-                throw new Error('API call failed: ' + response.status);
+                let error = await response.text()
+                throw new Error('API call failed: ' + error);
             }
         } catch (error) {
             // Handle any other errors
-            console.error('There was an error calling the external API', error);
+
+            console.log(error)
         }
     }
 };
