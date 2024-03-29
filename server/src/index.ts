@@ -3,11 +3,22 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import { body, matchedData, validationResult } from "express-validator";
 import * as cfg from "dotenv";
+import morgan from "morgan";
 
 const prisma = new PrismaClient();
 const app = express();
 cfg.config();
 
+
+if (app.get('env') == 'production') {
+  app.use(morgan("common", {
+    skip(req, res) {
+      return res.statusCode < 400;
+    },
+  }));
+} else {
+  app.use(morgan('dev'));
+}
 app.use(express.json());
 app.use(cors<Request>());
 
@@ -17,6 +28,20 @@ app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
+
+async function checkDatabaseConnection() {
+  try {
+    await prisma.$connect();
+    console.log('Connection successful');
+    // You can perform additional actions here if needed
+  } catch (error) {
+    console.error('Unable to connect to the database:', error);
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+checkDatabaseConnection();
 
 app.get("/ping", (req, res) => {
   res.send("pong");
@@ -31,7 +56,7 @@ app.get("/", async (req, res) => {
     });
     res.send(urls);
   } catch (error) {
-    res.status(500).json({"error": "Internal server error"})
+    res.status(500).json({ "error": "Internal server error" })
   }
 
 });
@@ -129,7 +154,8 @@ app.post(
 );
 
 const PORT = process.env.PORT || 8000;
-const server = app.listen(PORT, () =>
-  console.log(`
-🚀 Server ready at: http://localhost:${PORT}`),
+const server = app.listen(PORT,
+  // () =>
+  //   console.log(`
+  // 🚀 Server ready at: http://localhost:${PORT}`),
 );
