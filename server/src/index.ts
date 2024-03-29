@@ -1,32 +1,22 @@
-<<<<<<< HEAD
-import { PrismaClient } from '@prisma/client'
-import express, { Request, Response } from 'express'
-import cors from "cors"
-import { body, matchedData, validationResult } from 'express-validator';
-import * as cfg from "dotenv";
-=======
 import { PrismaClient } from "@prisma/client";
 import express, { Request, Response } from "express";
 import cors from "cors";
 import { body, matchedData, validationResult } from "express-validator";
->>>>>>> 88a2e02b3fab4027402c27a13336c83bac8b34a9
+import * as cfg from "dotenv";
 
 const prisma = new PrismaClient();
 const app = express();
+cfg.config();
 
-<<<<<<< HEAD
-app.use(express.json())
-app.use(cors<Request>())
+app.use(express.json());
+app.use(cors<Request>());
+
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET, PUT, POST");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
-=======
-app.use(express.json());
-app.use(cors<Request>());
->>>>>>> 88a2e02b3fab4027402c27a13336c83bac8b34a9
 
 app.get("/ping", (req, res) => {
   res.send("pong");
@@ -131,39 +121,10 @@ app.post(
       res.status(500).json({ error: "Error creating url." });
     }
   }
-<<<<<<< HEAD
-  const d = matchedData(req);
-  console.log(d)
-  try {
-    let url = await prisma.url.create({
-      data: {
-        original_url: d.original_url,
-        short_url: d.short_url
-      },
-      select: {
-        id: true,
-        original_url: true,
-        short_url: true,
-        click: true
-      }
-    })
-    res.status(201).json({ "message": "Url created succesfully.", data: url })
-  } catch (error) {
-    res.status(500).json({ "error": "Internal server error." })
-  }
-})
-
-const PORT = process.env.PORT || 8000
-=======
 );
->>>>>>> 88a2e02b3fab4027402c27a13336c83bac8b34a9
 
+const PORT = process.env.PORT || 8000;
 const server = app.listen(PORT, () =>
   console.log(`
-<<<<<<< HEAD
 🚀 Server ready at: http://localhost:${PORT}`),
-)
-=======
-🚀 Server ready at: http://localhost:3000`)
 );
->>>>>>> 88a2e02b3fab4027402c27a13336c83bac8b34a9
